@@ -80,6 +80,15 @@ local function debuginfo(message)
     end
 end
 
+local function get_workarea(p)
+    local area = p.workarea
+    area.x = area.x + beautiful.useless_gap
+    area.y = area.y + beautiful.useless_gap
+    area.width = area.width - beautiful.useless_gap * 2 - beautiful.border_width * 2
+    area.height = area.height - beautiful.useless_gap * 2 - beautiful.border_width * 2
+    return area
+end
+
 -- get an unique identifier of a window
 local function hash(client)
     if client then
@@ -308,7 +317,8 @@ end
 
 local function do_treetile(p)
     local old_clients = nil
-    local area = p.workarea
+    -- local area = p.workarea
+    local area = get_workarea(p)
     local n = #p.clients
     local gs = p.geometries
 
@@ -504,7 +514,7 @@ local function do_treetile(p)
                     if useless_gap == nil then
                         useless_gap = 0
                     else
-                        useless_gap = useless_gap * 2.0
+                        useless_gap = useless_gap * 2.0 + beautiful.border_width * 2
                     end
 
                     local avail_geo =nil
@@ -640,7 +650,7 @@ function treetile.resize_client(inc)  --{{{ resize client
     if useless_gap == nil then
         useless_gap = 0
     else
-        useless_gap = useless_gap * 2.0
+        useless_gap = useless_gap * 2.0 + beautiful.border_width * 2
     end
 
     new_geo.x = g.x
@@ -743,7 +753,8 @@ end
 -- 
 local function mouse_resize_handler(c, _, _, _)--{{{
     local orientation = orientation or "tile"
-    local wa = capi.screen[c.screen].workarea
+    -- local wa = capi.screen[c.screen].workarea
+    local wa = get_workarea(capi.screen[c.screen])
     local tag = tostring(c.screen.selected_tag or awful.tag.selected(c.screen))
     local cursor
     local g = c:geometry()
